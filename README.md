@@ -1,5 +1,5 @@
 The project consists of UI screens and a backend smart contract to sign and verify an investor's one time mandate for investing in mutual fund SIPs with his bank.
-The UI screens are as follows:
+The UI screens are as follows:<br>
 (1) RIA - Registered Investment Advisor: This person collects the details of the mandate from investor via email or phone call. Only base fields are collected for the purpose of this POC
 (2) Investor - Verifies the information in the one time mandate submitted by the investor. The investor signs by providing his bank account number, date of both and any other unique identifier known to him and his bank, along with his Ethereum account
 (3) CAMS (Transfer Agency) - Verifies and validates new mandates recieved. After verification, sends details to the bank for processing.
