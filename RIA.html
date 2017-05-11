@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="public/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="public/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="public/bower_components/web3/dist/web3.min.js"></script>
+    <script src="accounts.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <title>RIA</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="public/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        padding-left: 50px;
+        padding-right: 50px;
+      }
+    </style>
+
+  </head>
+  <script>
+
+$(document).ready(function(){
+ web3.eth.defaultAccount = web3.eth.accounts[0];// RIA's Ether Account
+ var array = [{name:"Grashias",account:web3.eth.accounts[1]},{name:"Adil",account:web3.eth.accounts[2]},{name:"John",account:web3.eth.accounts[5]},{name:"Joseph",account:web3.eth.accounts[6]}]; 
+ var count = 0;
+
+ // Initialize text boxes
+ $("#InvestorName").val("Grashias");
+ $("#InvestorAddress").val(web3.eth.accounts[1]);
+ $("#BankAddress").val(web3.eth.accounts[4]);
+
+ 
+ var filter = web3.eth.filter('latest');
+ $("#RIASubmit").click(function(){
+    var Name = $("#InvestorName").val();
+	var InvestorAddress = $("#InvestorAddress").val();
+	var BankAddress = $("#BankAddress").val();
+	var mandateID = contract.newMandateRIA.call(InvestorAddress,BankAddress,Name,{gas:250000});
+	if(mandateID == 0){
+		alert("Unable to submit Mandate ID");
+		filter.stopWatching();
+	}
+	else
+		contract.newMandateRIA(InvestorAddress,BankAddress,Name,{gas:250000});
+  });
+  $("#Switch").click(function(){
+	 count++;
+	 if(count == array.length) count = 0;
+	 $("#InvestorName").val(array[count].name);
+	 $("#InvestorAddress").val(array[count].account);
+	 $("#status").text(" Not Mined");
+  });
+  filter.watch(function(error, result){
+	var block = web3.eth.getBlock(result, true);
+    console.log('current block #' + block);
+	if(block.transactions.length != 0){
+        for (var index = 0; index < block.transactions.length; index++) {
+			var t = block.transactions[index];
+			var fro = t.from== web3.eth.defaultAccount ? "me" : t.from;
+			console.log(t);
+			if(fro == "me"){
+				$("#status").text(" Mined");
+				filter.stopWatching();
+				console.log("Stopped Watch");break;
+			}
+      }
+    }
+  });
+});
+</script>
+  <body>
+    <div class="container-fluid">
+
+      <div class="row">
+        <div>
+          <h2 class="sub-header">Input RIA</h2>
+            <form class="form-inline" role="form"><center>
+              <div class="form-group">
+                <label for="sell">Investor Address</label>
+				<input type="text" class="form-control" id="InvestorAddress">
+				<label for="buy">Investor Name</label>
+                <input type="text" class="form-control" id="InvestorName">
+				<label for="buy">Bank Address</label>
+                <input type="text" class="form-control" id="BankAddress">
+				<button class="btn btn-primary" id="RIASubmit" type="button">Submit Details</button>
+				<button class="btn btn-primary" id="Switch" type="button">Switch</button>
+              </div>
+			  <br><br><label>Mine Status:</label><label id="status">Not Mined</label>
+            </center></form>
+
+        </div>
+      </div>
+
+
+    </div>
+
+  </body>
+</html>

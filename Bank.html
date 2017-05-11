@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./public/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="./public/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="public/bower_components/web3/dist/web3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="accounts.js"></script>
+    <title>Bank</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="public/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        padding-left: 50px;
+        padding-right: 50px;
+      }
+      table {
+        // Other values...
+        overflow-x: hidden;
+        overflow-y: hidden;
+        // Other values...
+      }
+    </style>
+
+  </head>
+  <script>
+
+$(document).ready(function(){
+   var mandateID;
+   var mandateDetails;
+   web3.eth.defaultAccount = web3.eth.accounts[4];
+// web3.eth.defaultAccount = web3.eth.accounts[2]; // Investor Account
+ $("#fetchResult").click(function(){
+	mandateID = $("#mandateID").val();
+	mandateDetails = contract.getMandatesDetailsForBank.call(mandateID);
+	$("#InvestorName").val(mandateDetails[0]);
+  	$("#InvestorAddress").val(mandateDetails[2]);
+    $("#InvestorSignature").val(mandateDetails[1]);
+	$("#CAMSApproval").val(mandateDetails[5]);
+	$("#BankApproval").val(mandateDetails[4]);
+	var camsApproval = mandateDetails[5];
+	var bankApproval = mandateDetails[4];
+	if(camsApproval == true & bankApproval==false ){
+	  enable();
+      $('#genHash').prop('disabled', false);
+	}else{
+	  disable();
+      $('#genHash').prop('disabled', true);
+	}
+	$('#approveMandate').prop('disabled', true);
+	$("#verificationStatus").val("");
+  });
+   $("#genHash").click(function(){
+		var uniqueCode = $("#UniqueCode").val();
+		var doB = $("#DoB").val();
+		var accountNumber = $("#BankAccountNumber").val();
+		var secret = uniqueCode+doB+accountNumber;
+		var signature = mandateDetails[1];
+		var r = signature.slice(0, 66);
+		var s = '0x' + signature.slice(66, 130);
+		var v = '0x' + signature.slice(130, 132);
+		v = web3.toDecimal(v);
+		if(contract.bankApproval.call(mandateID,secret,v,r,s) == true){
+			$("#verificationStatus").val("Sucess");
+			$('#approveMandate').prop('disabled', false);
+			disable();
+		}else{
+			$("#verificationStatus").val("Failed");
+			$('#approveMandate').prop('disabled', true);
+			enable();
+		}	
+   });
+   $("#approveMandate").click(function(){
+		var uniqueCode = $("#UniqueCode").val();
+		var doB = $("#DoB").val();
+		var accountNumber = $("#BankAccountNumber").val();
+		var secret = uniqueCode+doB+accountNumber;
+		var signature = mandateDetails[1];
+		var r = signature.slice(0, 66);
+		var s = '0x' + signature.slice(66, 130);
+		var v = '0x' + signature.slice(130, 132);
+		v = web3.toDecimal(v);
+		if(contract.bankApproval.call(mandateID,secret,v,r,s) == true){
+			contract.bankApproval(mandateID,secret,v,r,s);
+		}
+   });
+});
+
+function disable(){
+	$('#BankAccountNumber').prop('disabled', true);
+	$('#UniqueCode').prop('disabled', true);
+	$('#DoB').prop('disabled', true);
+}
+
+function enable(){
+	$('#BankAccountNumber').prop('disabled', false);
+	$('#UniqueCode').prop('disabled', false);
+	$('#DoB').prop('disabled', false);
+}
+</script>
+<body>
+  <div class="container-fluid">
+<h2 class="sub-header">Bank Approval</h2>
+    <div class="row">
+    <div class="col-sm-6">
+      <h3 class="sub-header">Mandate</h3>
+      <form class="form-inline"><center>
+      <div class="form-group row">
+              <label for="sell">Mandate ID</label>
+      <input type="text" class="form-control" id="mandateID" placeholder="Enter Mandate ID" value="">
+	  <button class="btn btn-primary" id="fetchResult" type="button">Get Record</button>
+      </div><br><br>
+          </center></form>
+    </div>
+	<div class="col-sm-6">
+		<h3 class="sub-header">Details</h3>
+		  <form class="form-inline" role="form"><center>
+		  <div class="form-group row">
+				  <label for="sell">Investor Name</label>
+		  <input type="text" class="form-control" id="InvestorName" placeholder="" value="" disabled>
+		  </div><br><br>
+		  <div class="form-group row">
+		  <label for="buy">Investor Address</label>
+				  <input type="text" class="form-control" id="InvestorAddress" placeholder="" value="" disabled>
+		  </div><br><br>
+		  <div class="form-group row">
+		  <label for="buy">Investor Signature</label>
+				  <input type="text" class="form-control" id="InvestorSignature" placeholder="" value="" disabled>
+		  </div><br><br>
+		  <div class="form-group row">
+		  <label for="buy">CAMS Approval</label>
+				  <input type="text" class="form-control" id="CAMSApproval" placeholder="" value="" disabled>
+		  </div><br><br>
+		  <div class="form-group row">
+		  <label for="buy">Bank Approval</label>
+				  <input type="text" class="form-control" id="BankApproval" placeholder="" value="" disabled>
+		  </div><br><br>
+			  </center></form>
+	  </div>
+  </div>
+  <div class="row">
+  <div class="col-sm-12">
+          <form class="form-inline" role="form"><center>
+			  <div class="form-group row">
+			  <label>Unique Code</label>
+					  <input type="text" class="form-control" id="UniqueCode" value="" disabled>
+			  </div><br><br>
+			  <div class="form-group row">
+			  <label>Date of Birth</label>
+					  <input type="text" class="form-control" id="DoB" value="" disabled>
+			  </div><br><br>
+			  <div class="form-group row">
+			  <label>Bank Account Number</label>
+					  <input type="text" class="form-control" id="BankAccountNumber" value="" disabled><br>
+			  </div><br><br>
+			  <div class="form-group row">
+			  <label>Verification Status</label>
+					  <input type="text" class="form-control" id="verificationStatus" value="" disabled><br>
+			  </div><br><br>
+			  <div class="form-group row">
+				  <button class="btn btn-primary" id="genHash" type="button" disabled>Verify Mandate</button>
+				  <button class="btn btn-primary" id="approveMandate" type="button" disabled>Approve Mandate</button>
+			  </div>
+		  </center></form>
+ 
+  </div>
+
+
+
+
+
+  </div>
+
+</body>
+</html>

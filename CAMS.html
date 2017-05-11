@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./public/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="./public/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="public/bower_components/web3/dist/web3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="accounts.js"></script>
+    <title>CAMS</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="public/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        padding-left: 50px;
+        padding-right: 50px;
+      }
+      table {
+        // Other values...
+        overflow-x: hidden;
+        overflow-y: hidden;
+        // Other values...
+      }
+    </style>
+
+  </head>
+  <script>
+
+$(document).ready(function(){
+ web3.eth.defaultAccount = web3.eth.accounts[0]; // Investor Account
+ var mandates = contract.getCAMSMandates.call();
+ if(mandates.length == 0)
+  alert("No new mandates recieved")
+ else{
+   var html = "";
+   for(var i = 0; i<mandates.length;i++){
+     html += "<tr>"
+     var mandateID = mandates[i].c[0];
+     var mandateDetails = contract.getCAMSMandatesDetails.call(mandateID);
+     //console.log(mandateDetails);
+	 var camsApproval = mandateDetails[5];
+	 var bankApproval = mandateDetails[4];
+	 if(camsApproval == false)
+		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval+"</td>"+"<td><button class='btn btn-primary' id='button"+mandateID+"' onclick='execute("+mandateID+")'>Verify & Send to Bank</button></td>";
+	 else
+		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval;		
+	html += "</tr>"
+   }
+   $("#tbody").html(html);
+ }
+});
+function execute(mandateID){
+  contract.camsApproval(mandateID);
+    $('#button'+mandateID).prop('disabled', true);
+}
+
+</script>
+  <body>
+    <div class="container-fluid">
+	<h2 class="sub-header">CAMS Approval</h2>
+        <div class="table-responsive striped">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Mandate ID</th>
+                <th>Investor Name</th>
+                <th>Investor Address</th>
+                <th>Investor Signature</th>
+                <th>Bank Approval</th>
+                <th>CAMS Approval</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+          </table>
+          </div>
+  </div>
+
+  </body>
+</html>
