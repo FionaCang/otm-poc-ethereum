@@ -1,3 +1,4 @@
+<h2>One Time Mandate POC using Ethereum</h2>
 The project consists of UI screens and a backend smart contract to sign and verify an investor's one time mandate for investing in mutual fund SIPs with his bank.
 The UI screens are as follows:<br>
 (1) RIA - Registered Investment Advisor: This person collects the details of the mandate from investor via email or phone call. Only base fields are collected for the purpose of this POC<br>
