@@ -8,6 +8,6 @@ The UI screens are as follows:<br>
 Developer Note: The smart contract needs to hosted on a reliable instance or a local geth node needs to fired up.<br>
 A total of six accounts are precreated with funds. Please do replace them with 6 new funded accounts for the following persons:<br>
 CAMS/RIA - 1<br>
-Investor Accoutns - 4<br>
+Investor Accounts - 4<br>
 Bank Accounts - 1<br>
 This logic can be extended to other domains and areas where user signature needs to verified and validated by multiple parties. It obviates the need for paper signatures and time consuming processes like courier of documents.
