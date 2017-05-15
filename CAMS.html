@@ -46,17 +46,25 @@ $(document).ready(function(){
 	 var camsApproval = mandateDetails[5];
 	 var bankApproval = mandateDetails[4];
 	 if(camsApproval == false)
-		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval+"</td>"+"<td><button class='btn btn-primary' id='button"+mandateID+"' onclick='execute("+mandateID+")'>Verify & Send to Bank</button></td>";
+		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval+"</td>"+"<td><button class='btn btn-primary' id='bankSend"+mandateID+"' onclick='bankSend("+mandateID+")'>Verify & Send to Bank</button></td>";
+	 else if(camsApproval == true && bankApproval == true)
+		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval+"</td>"+"<td><button class='btn btn-primary' id='genUMRN"+mandateID+"' onclick='generateUMRN("+mandateID+")'>Generate UMRN</button></td>";
+	 else if(camsApproval == true && bankApproval == false)
+		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval+"</td><td><b>Pending Bank Approval</b></td>";
 	 else
-		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval;		
+		html+= "<td>"+mandateID+"</td>"+"<td>"+mandateDetails[0]+"</td>"+"<td>"+mandateDetails[2]+"</td>"+"<td>"+mandateDetails[1].substr(0,10)+"...</td>"+"<td>"+bankApproval+"</td>"+"<td>"+camsApproval+"</td>";
 	html += "</tr>"
    }
    $("#tbody").html(html);
  }
 });
-function execute(mandateID){
+function bankSend(mandateID){
   contract.camsApproval(mandateID);
     $('#button'+mandateID).prop('disabled', true);
+}
+
+function generateUMRN(mandateID){
+	// TO-DO
 }
 
 </script>

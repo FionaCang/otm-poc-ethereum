@@ -1,0 +1,24 @@
+Items to be completed
+
+- In the RIA.html
+  1) Write HTML for online form fields as in Tierion
+
+  2) On line 44 - New Mandate ID is obtained by a '.call()' function on newMandateRIA()
+     When RIA person presses submit button,
+     Store this mandate reference in database along with the other online mandate fields
+
+- In the Investor.html
+
+  1) In line 61 - Mandate ID for investor is obtained from his eth.defaultAccount
+     Using this Mandate ID, populate online form fields from the database on the investor screen
+     (Populate or download from database, choice is up to you)
+
+- In the CAMS.html
+
+  1) Add a 'View' button to each populated row of investor mandates. On clicking view PDF will be
+     downloaded OR details will be populated
+  2) Complete Generate UMRN function to generate a new UMRN number and displaying a random number. Store this number in the database
+
+- In the Bank.html
+
+  1) Build the same functionality as CAMS.html where the online form can be downloaded for the bank

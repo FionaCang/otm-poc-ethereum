@@ -27,7 +27,7 @@
 
 $(document).ready(function(){
  web3.eth.defaultAccount = web3.eth.accounts[0];// RIA's Ether Account
- var array = [{name:"Grashias",account:web3.eth.accounts[1]},{name:"Adil",account:web3.eth.accounts[2]},{name:"John",account:web3.eth.accounts[5]},{name:"Joseph",account:web3.eth.accounts[6]}]; 
+ var array = [{name:"Grashias",account:web3.eth.accounts[1]},{name:"Adil",account:web3.eth.accounts[2]},{name:"John",account:web3.eth.accounts[5]},{name:"Joseph",account:web3.eth.accounts[6]}];
  var count = 0;
 
  // Initialize text boxes
@@ -35,13 +35,14 @@ $(document).ready(function(){
  $("#InvestorAddress").val(web3.eth.accounts[1]);
  $("#BankAddress").val(web3.eth.accounts[4]);
 
- 
+
  var filter = web3.eth.filter('latest');
  $("#RIASubmit").click(function(){
-    var Name = $("#InvestorName").val();
+  var Name = $("#InvestorName").val();
 	var InvestorAddress = $("#InvestorAddress").val();
 	var BankAddress = $("#BankAddress").val();
 	var mandateID = contract.newMandateRIA.call(InvestorAddress,BankAddress,Name,{gas:250000});
+  console.log(mandateID);
 	if(mandateID == 0){
 		alert("Unable to submit Mandate ID");
 		filter.stopWatching();

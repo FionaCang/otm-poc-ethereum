@@ -1,0 +1,64 @@
+Deployment Information and Overall Flow
+
+1. Navigate to C:\Users\{user}\AppData\Roaming\Ethereum and delete the "testnet" directory
+
+2. Launch testnet
+
+  geth --testnet --fast --cache=512 --rpc --rpccorsdomain --rpcapi "*" console
+
+3. Create 6 new accounts using personal.newAccount(). Unlock all accounts permanently
+
+  personal.unlockAccount(eth.accounts[0],"pass",0)
+  personal.unlockAccount(eth.accounts[1],"pass",0)
+  personal.unlockAccount(eth.accounts[2],"pass",0)
+  personal.unlockAccount(eth.accounts[3],"pass",0)
+  personal.unlockAccount(eth.accounts[4],"pass",0)
+  personal.unlockAccount(eth.accounts[5],"pass",0)
+  personal.unlockAccount(eth.accounts[6],"pass",0)
+
+4. Start mining and generate ether on coinbase accounts
+
+5. After a few minutes, transfer ether to all other accounts and fund them
+
+  eth.sendTransaction({from:eth.coinbase, to:eth.accounts[1], value: web3.toWei(0.05, "ether")})
+  eth.sendTransaction({from:eth.coinbase, to:eth.accounts[2], value: web3.toWei(0.05, "ether")})
+  eth.sendTransaction({from:eth.coinbase, to:eth.accounts[3], value: web3.toWei(0.05, "ether")})
+  eth.sendTransaction({from:eth.coinbase, to:eth.accounts[4], value: web3.toWei(0.05, "ether")})
+  eth.sendTransaction({from:eth.coinbase, to:eth.accounts[5], value: web3.toWei(0.05, "ether")})
+  eth.sendTransaction({from:eth.coinbase, to:eth.accounts[6], value: web3.toWei(0.05, "ether")})
+
+  The accounts are allocated to the users in the following manner in the code:
+
+   0 ->  CAMS
+   1 ->  Investor 1
+   2 ->  Investor 2
+   3 ->  CAMS
+   4 ->  Bank
+   5 ->  Investor 3
+   6 ->  Investor 4
+
+6. Copy the contents of OTMMandate.sol into Remix and generate web3 deploy
+
+7. Paste web3 deploy in js console and save the contract address
+
+8. Update 'accounts.js' with abi and contract address
+
+9. Launch and initialize contract by opening RIA.html first, so that variable 'owner' in the contract gets initialized to the CAMS address
+
+10.Create RIA transaction by hitting submit. Wait till bottom text gets changed to 'Mined'. If errors exist check console.
+
+11. Navigate to investor page and check if new investor registration is visible
+
+12. Sign the relevant fields and hit submit to start a new transaction
+
+13. Open CAMS.html. Investor record should be displayed after investor signature transactions gets confirmed
+
+14. Hit on Verify & Send to Bank. Note Mandate ID. Wait for transaction to get mined.
+
+15. Open Bank.html and query the record with Mandate ID by hitting Get Record
+
+16. When record is displayed, fill in correct fields (as before) and click 'Verify'
+
+17. If 'Success' is displayed hit 'Approve Mandate' and wait for transaction to get Mined
+
+18. Go back to CAMS.html after transaction gets mined to verify whether bank status changed to 'true'

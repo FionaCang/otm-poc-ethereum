@@ -35,7 +35,7 @@ $(document).ready(function(){
    var mandateID;
    var mandateDetails;
    web3.eth.defaultAccount = web3.eth.accounts[4];
-// web3.eth.defaultAccount = web3.eth.accounts[2]; // Investor Account
+   console.log("Bank Address: "+web3.eth.defaultAccount);
  $("#fetchResult").click(function(){
 	mandateID = $("#mandateID").val();
 	mandateDetails = contract.getMandatesDetailsForBank.call(mandateID);
@@ -74,7 +74,7 @@ $(document).ready(function(){
 			$("#verificationStatus").val("Failed");
 			$('#approveMandate').prop('disabled', true);
 			enable();
-		}	
+		}
    });
    $("#approveMandate").click(function(){
 		var uniqueCode = $("#UniqueCode").val();
@@ -168,7 +168,7 @@ function enable(){
 				  <button class="btn btn-primary" id="approveMandate" type="button" disabled>Approve Mandate</button>
 			  </div>
 		  </center></form>
- 
+
   </div>
 
 
